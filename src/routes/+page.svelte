@@ -1,59 +1,63 @@
 <script>
-	import Counter from './Counter.svelte';
-	import welcome from '$lib/images/svelte-welcome.webp';
-	import welcome_fallback from '$lib/images/svelte-welcome.png';
+	import { createTodoStore } from './todos.js';
+	import TodoList from './TodoList.svelte';
+
+	const todos = createTodoStore([
+		{ done: false, description: 'Réviser les mathématiques' }
+	]);
 </script>
 
-<svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
-</svelte:head>
+<div class="board">
+	<input
+		placeholder="Quelle notion voulez-vous enregistrer"
+		on:keydown={(e) => {
+			if (e.key === 'Enter') {
+				todos.add(e.currentTarget.value);
+				e.currentTarget.value = '';
+			}
+		}}
+	/>
 
-<section>
-	<h1>
-		<span class="welcome">
-			<picture>
-				<source srcset={welcome} type="image/webp" />
-				<img src={welcome_fallback} alt="Welcome" />
-			</picture>
-		</span>
+    <h2>Liste des notions à traiter de la journée</h2>
 
-		to your new<br />SvelteKit app
-	</h1>
-
-	<h2>
-		try editing <strong>src/routes/+page.svelte</strong>
-	</h2>
-
-	<Counter />
-</section>
+	<div class="listes">
+        <div class="todo">
+            <h2>A faire</h2>
+            <TodoList store={todos} done={false} />
+        </div>
+    
+        <div class="done">
+            <h2>Fait</h2>
+            <TodoList store={todos} done={true} />
+        </div>
+    </div>
+</div>
 
 <style>
-	section {
+	.board {
 		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 0.6;
+        flex-direction: column;
+		max-width: 36em;
+		margin: 0 auto;
+        font-family: 'Courier New', Courier, monospace;
 	}
 
-	h1 {
-		width: 100%;
+    .listes {
+        display: flex;
+        flex-direction: row;
+        border: solid;
+    }
+
+	.board > input {
+		font-size: 1.4em;
+		grid-column: 1/3;
+		padding: 0.5em;
+		margin: 0 0 1rem 0;
+        font-family: 'Courier New', Courier, monospace;
 	}
 
-	.welcome {
-		display: block;
-		position: relative;
-		width: 100%;
-		height: 0;
-		padding: 0 0 calc(100% * 495 / 2048) 0;
-	}
-
-	.welcome img {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top: 0;
-		display: block;
+	h2 {
+		font-size: 2em;
+		font-weight: 200;
 	}
 </style>
