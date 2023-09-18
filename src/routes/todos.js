@@ -32,6 +32,9 @@ export function createTodoStore(initial) {
 				...$todos.filter((t) => t !== todo),
 				{ ...todo, done }
 			]);
+		},
+		edit: (uid, description) => {
+			
 		}
 	};
 }
